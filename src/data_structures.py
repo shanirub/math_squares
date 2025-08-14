@@ -29,6 +29,33 @@ class Board:
         # shadow board to track cell selection status
         # initialized with CellStatus.EMPTY to indicate no cells are selected
         self.shadow_board = [[CellStatus.EMPTY for _ in range(cols)] for _ in range(rows)]
+        self.solution_shadow_board = [[randint(CellStatus.SELECTED.value, CellStatus.DESELECTED.value) for _ in range(cols)] for _ in range(rows)]
+        self.solution_sum_rows = [
+            self.get_solution_sum_row(row) for row in range(self.rows)
+        ]
+        self.solution_sum_cols = [
+            self.get_solution_sum_col(col) for col in range(self.cols)
+        ]
+
+
+    def get_solution_sum_col(self, col: int) -> int:
+        temp_sum = 0
+
+        for row in range(self.rows):
+            if self.solution_shadow_board[row][col] == CellStatus.SELECTED.value:
+                temp_sum += self.board[row][col]
+
+        return temp_sum
+
+    def get_solution_sum_row(self, row: int) -> int:
+        temp_sum = 0
+
+        for col in range(self.cols):
+            if self.solution_shadow_board[row][col] == CellStatus.SELECTED.value:
+                temp_sum += self.board[row][col]
+
+        return temp_sum
+
 
     def get_row_values(self, row: int) -> list[int]:
         """
@@ -80,17 +107,13 @@ class Board:
         """
         return reduce(op_map[op], self.get_column_values(col))
 
-    def __eq__(self, other):
+    def print_board(self):
         """
-        Check equality of two Board instances.
-
-        Args:
-            other (Board): Another Board instance to compare with.
-
-        Returns:
-            bool: True if both boards are equal, False otherwise.
+        Print the board in a readable format.
         """
-        return (self.rows == other.rows and
-                self.cols == other.cols and
-                self.board == other.board and
-                self.shadow_board == other.shadow_board)
+        for row_number, row in enumerate(self.board):
+            print(" | ".join(str(cell) for cell in row),
+                  f" || {self.get_solution_sum_row(row_number)} ||")
+        print("==  " * self.cols)
+        print(f"{[r for r in self.solution_sum_cols]}")
+        print("\n")
