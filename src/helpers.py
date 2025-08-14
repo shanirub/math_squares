@@ -1,27 +1,31 @@
-def get_row_values(row: int) -> list[int]:
+from src.data_structures import CellStatus
+
+
+def generate_new_board(rows: int = 5, cols: int = 5, max_value: int = 10) -> list[list[int]]:
     """
-    Get the values for a given row.
+    Generate a new board with random values.
 
     Args:
-        row (int): The row number (not used in this function).
+        rows (int): Number of rows in the board.
+        cols (int): Number of columns in the board.
+        max_value (int): Maximum value for the random integers.
 
     Returns:
-        list[int]: A list of integer values for the row.
+        list[list[int]]: A 2D list representing the board with random integers.
     """
-    # This function is a placeholder and should be replaced with actual logic to retrieve row values.
-    return [1, 2, 3, 4]  # Example values, replace with actual data retrieval logic.
+    from random import randint
+    return [[randint(1, max_value) for _ in range(cols)] for _ in range(rows)]
 
-def get_row_total(row: int, op: str) -> int:
+def generate_empty_shadow_board(rows: int = 5, cols: int = 5) -> list[list[int]]:
     """
-    Calculate the total for a given row based on the operation and values.
+    Generate a shadow board initialized with CellStatus.EMPTY.
 
     Args:
-        row (int): The row number (not used in this function).
-        op (str): The operation to perform ('+' or '*').
+        rows (int): Number of rows in the shadow board.
+        cols (int): Number of columns in the shadow board.
 
     Returns:
-        int: The result of applying the operation to the values.
+        list[list[int]]: A 2D list representing the shadow board with CellStatus.EMPTY.
     """
-    from functools import reduce
-    from data_structures import op_map
-    return reduce(op_map[op], get_row_values(row))
+
+    return [[CellStatus.EMPTY.value for _ in range(cols)] for _ in range(rows)]
