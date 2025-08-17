@@ -21,14 +21,26 @@ class CellStatus(Enum):
 
 class Board:
     def __init__(self, rows: int = NUM_OF_ROWS, cols: int = NUM_OF_LINES):
-        # number of rows and columns in the board
+        """
+        1. Initialize a board with random numbers.
+        2. Initialize a shadow board to track cell selection status.
+        3. Initialize a solution shadow board with random values to simulate a solution.
+        4. Calculate the solution sums for each row and column.
+
+        :param rows: Number of rows in the board.
+        :param cols: Number of columns in the board.
+        """
         self.rows = rows
         self.cols = cols
-        # board with numbers
+
+        # initialize the board with random values between 1 and MAX_VALUE
         self.board = [[randint(1, MAX_VALUE) for _ in range(cols)] for _ in range(rows)]
+
         # shadow board to track cell selection status
         # initialized with CellStatus.EMPTY to indicate no cells are selected
         self.shadow_board = [[CellStatus.EMPTY for _ in range(cols)] for _ in range(rows)]
+
+        # solution shadow board initialized with random values to simulate a solution
         self.solution_shadow_board = [[randint(CellStatus.SELECTED.value, CellStatus.DESELECTED.value) for _ in range(cols)] for _ in range(rows)]
         self.solution_sum_rows = [
             self.get_solution_sum_row(row) for row in range(self.rows)
@@ -37,8 +49,12 @@ class Board:
             self.get_solution_sum_col(col) for col in range(self.cols)
         ]
 
-
     def get_solution_sum_col(self, col: int) -> int:
+        """
+        Calculate the expected sum for a given column based on the solution shadow board.
+        :param col: The column number.
+        :return: expected sum of column values based on the solution shadow board.
+        """
         temp_sum = 0
 
         for row in range(self.rows):
@@ -48,6 +64,11 @@ class Board:
         return temp_sum
 
     def get_solution_sum_row(self, row: int) -> int:
+        """
+        Calculate the expected sum for a given row based on the solution shadow board.
+        :param row: the row number.
+        :return: expected sum of row values based on the solution shadow board.
+        """
         temp_sum = 0
 
         for col in range(self.cols):
@@ -109,7 +130,8 @@ class Board:
 
     def print_board(self):
         """
-        Print the board in a readable format.
+        print all board cells (including empty cells) with their values
+        and the solution sums for each row and column.
         """
         for row_number, row in enumerate(self.board):
             print(" | ".join(str(cell) for cell in row),
